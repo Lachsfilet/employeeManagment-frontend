@@ -1,0 +1,14 @@
+// TODO: save button for edit and create view // DONE
+// TODO: sticky header // DONE
+// TODO: FAB's on overview page // DONE
+// TODO: Form Validation // DONE
+// TODO: Reload on Delete and Save // DONE
+// TODO: add responsiveness // DONE
+header
+overview
+view
+wildcard // no need for remodeling/adding responsiveness
+alert // no need for remodeling/adding responsiveness
+create
+
+// TODO: Profile picture upload and display // DONE

@@ -1,0 +1,12 @@
+@use '@angular/material' as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.dialog-overrides((
+    container-color: #252525,
+    supporting-text-color: white,
+    subhead-color: white,
+    subhead-size: 25px,
+    subhead-weight: bold,
+  ));
+}

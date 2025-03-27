@@ -1,0 +1,20 @@
+.animated-background-1 {
+  background-size: 400%;
+  animation: animation 1s ease infinite;
+}.animated-background-2 {
+  background-size: 400%;
+  animation: animation 2s ease infinite;
+}.animated-background-3 {
+  background-size: 400%;
+  animation: animation 2.5s ease infinite;
+}
+
+@keyframes animation {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}

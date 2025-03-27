@@ -1,0 +1,10 @@
+@if (isOpen) {
+  <h1 mat-dialog-title>{{ getDialogHeader().emoji }}{{ getDialogHeader().text }}</h1>
+  <mat-dialog-content>{{ message }}</mat-dialog-content>
+  <mat-dialog-actions class="absolute">
+    <button [mat-dialog-close]="buttonAction" class="bg-slate-600/25 hover:bg-emerald-400/10 h-10 w-25 rounded-md">{{ buttonText }}</button>
+    @if (extraButton) {
+      <button [mat-dialog-close]="extraButtonAction" class="bg-slate-600/25 hover:bg-emerald-400/10 h-10 w-25 rounded-md ml-5">{{ extraButtonText }}</button>
+    }
+  </mat-dialog-actions>
+}

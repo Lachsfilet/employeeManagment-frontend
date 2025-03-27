@@ -1,0 +1,22 @@
+<header class="bg-[#202020] flex items-center w-full h-[10%] px-4 fixed top-0 z-10">
+  <a [routerLink]="'/'" class="flex items-center m-2">
+    <img width="32" height="32"
+         src="https://img.icons8.com/external-kmg-design-outline-color-kmg-design/32/external-supervisor-human-resources-kmg-design-outline-color-kmg-design.png"
+         alt="external-supervisor-human-resources-kmg-design-outline-color-kmg-design"
+         class="mr-4"/>
+    <h1 class="bg-gradient-to-r from-emerald-300 to-emerald-600 bg-clip-text text-transparent md:text-3xl text-2xl">
+      EmployeeManagement
+    </h1>
+  </a>
+
+  <nav class="flex md:justify-end md:flex-1 invisible md:visible">
+    <ul class="flex items-center">
+      <li>
+        <button [routerLink]="['/create']"
+                class="h-10 w-24 hover:bg-[#151515] rounded-md flex items-center justify-center">
+          <h2>Create</h2>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
