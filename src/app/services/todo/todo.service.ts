@@ -6,7 +6,7 @@ import {Todo} from '../../interfaces/todo';
   providedIn: 'root'
 })
 export class TodoService {
-  baseUrl = "https://209.38.236.89:8080";
+  baseUrl = "https://backend.lachsfilet.tech:8080";
 
   constructor(private httpClient: HttpClient) {
   }
