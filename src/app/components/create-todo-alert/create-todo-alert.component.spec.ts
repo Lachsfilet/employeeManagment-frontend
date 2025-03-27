@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateTodAlertComponent } from './create-tod-alert.component';
+import { CreateTodoAlertComponent } from './create-todo-alert.component';
 
 describe('CreateTodAlertComponent', () => {
-  let component: CreateTodAlertComponent;
-  let fixture: ComponentFixture<CreateTodAlertComponent>;
+  let component: CreateTodoAlertComponent;
+  let fixture: ComponentFixture<CreateTodoAlertComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateTodAlertComponent]
+      imports: [CreateTodoAlertComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CreateTodAlertComponent);
+    fixture = TestBed.createComponent(CreateTodoAlertComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
