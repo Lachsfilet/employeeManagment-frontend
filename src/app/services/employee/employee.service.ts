@@ -6,7 +6,7 @@ import { Employee } from '../../interfaces/employee';
   providedIn: 'root'
 })
 export class EmployeeService {
-  baseUrl = "https://backend.lachsfilet.tech"
+  baseUrl = "https://backend.lachsfilet.tech:8080"
 
   constructor(private httpClient: HttpClient) {
   }
