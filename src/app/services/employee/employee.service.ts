@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Employee } from '../../interfaces/employee';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
-  baseUrl = environment.backendUrl;
+  baseUrl = "https://backend.lachsfilet.tech"
 
   constructor(private httpClient: HttpClient) {
   }
