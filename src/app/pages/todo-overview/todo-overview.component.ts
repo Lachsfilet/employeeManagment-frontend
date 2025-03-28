@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { TodoService } from '../../services/todo/todo.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, of, switchMap, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {Component} from '@angular/core';
+import {TodoService} from '../../services/todo/todo.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BehaviorSubject, map, Observable, of, switchMap, tap} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {AsyncPipe, NgClass} from '@angular/common';
-import { Todo } from '../../interfaces/todo';
-import { MatListModule } from '@angular/material/list';
+import {Todo} from '../../interfaces/todo';
+import {MatListModule} from '@angular/material/list';
 import {MatDialog} from '@angular/material/dialog';
 import {AlertComponent, DialogType} from '../../components/alert/alert.component';
 import {CreateTodoAlertComponent} from '../../components/create-todo-alert/create-todo-alert.component';
@@ -29,28 +29,31 @@ export class TodoOverviewComponent {
   deleteButtonClicked: boolean;
   employeeId
 
-  constructor(private todoService: TodoService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {
+  constructor(
+    private todoService: TodoService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private dialog: MatDialog
+  ) {
     this.todos$ = this.reloadSubject.pipe(
       switchMap(() => {
         return this.route.params.pipe(
+          tap(params => this.employeeId = params['id']),
           map(params => params['id']),
           switchMap((id) => this.todoService.getAllTodosByEmployeeId(id).pipe(
             tap(todos => {
               this.completedTodos = todos.filter(todo => todo.completed);
               this.dueTodos = todos.filter(todo => !todo.completed);
-              if (todos) {
-                this.employeeId = todos[0].employeeId
-              }
             }),
           ))
         );
       })
-    )
+    );
   }
 
   markTodo(id: number, completed: boolean) {
     let desc = completed ? "Are you sure you want to mark this Todo as done?" : "Are you sure you want to mark this Todo as incomplete?"
-    if(!this.deleteButtonClicked) {
+    if (!this.deleteButtonClicked) {
       this.dialog.open(AlertComponent, {
         data: {
           title: 'Are you sure?',
@@ -80,7 +83,8 @@ export class TodoOverviewComponent {
         title: `⚠️ Remove ${todo.title}`,
         buttonText: 'Delete',
         buttonAction: true
-      }}).afterClosed().pipe(
+      }
+    }).afterClosed().pipe(
       switchMap((result) => {
         if (result) {
           return this.todoService.deleteTodoById(todo.id)
@@ -92,6 +96,7 @@ export class TodoOverviewComponent {
   }
 
   createTodo() {
+    console.log(this.employeeId)
     this.dialog.open(CreateTodoAlertComponent, {
       data: {
         employeeId: this.employeeId

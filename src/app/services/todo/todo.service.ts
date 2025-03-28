@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Todo} from '../../interfaces/todo';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { Todo } from '../../interfaces/todo';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  baseUrl = "https://backend.lachsfilet.tech:8080";
+  baseUrl = environment.backendUrl;
 
   constructor(private httpClient: HttpClient) {
   }

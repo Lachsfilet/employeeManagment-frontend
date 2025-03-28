@@ -1,13 +1,11 @@
 import {Component, Inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {MatInput} from '@angular/material/input';
 import {TodoService} from '../../services/todo/todo.service';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 
@@ -18,7 +16,6 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
     MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
-    MatInput,
     ReactiveFormsModule
   ],
   templateUrl: './create-todo-alert.component.html',
@@ -29,6 +26,7 @@ export class CreateTodoAlertComponent {
   employeeId: number
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private todoService: TodoService) {
     this.employeeId = data.employeeId
+    console.log("Data: ", data.employeeId, "This: ", this.employeeId)
   }
 
   createTodo() {

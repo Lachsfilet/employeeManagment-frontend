@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Employee} from '../../interfaces/employee';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { Employee } from '../../interfaces/employee';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
-  baseUrl = "https://backend.lachsfilet.tech:8080";
+  baseUrl = environment.backendUrl;
 
   constructor(private httpClient: HttpClient) {
   }
@@ -29,16 +30,15 @@ export class EmployeeService {
       lastName: employee.lastName,
       image: employee.image,
       email: employee.email
-      });
+    });
   }
 
   deleteEmployee(id: number) {
     return this.httpClient.delete(`${this.baseUrl}/employee/${id}`);
   }
 
-
   downloadEmployees() {
-    return this.httpClient.get(`${this.baseUrl}/employee/download`, {responseType: 'blob'});
+    return this.httpClient.get(`${this.baseUrl}/employee/download`, { responseType: 'blob' });
   }
 
   uploadEmployee(file: File) {
