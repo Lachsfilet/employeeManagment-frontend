@@ -1,6 +1,9 @@
 <h1 mat-dialog-title>Create Todo</h1>
 <mat-dialog-content>
-  <input matNativeControl [formControl]="todo">
+<!--  <input class="bg-[#191919] h-10 w-[95%] rounded-md pl-3" [formControl]="todo" placeholder="Bring my boss a coffee...">-->
+  <input id="todo" type="text"
+         class="pl-[-1rem] bg-transparent border-b-2 h-10 w-[95%] border-[#404040]/35 outline-none"
+         [formControl]="todo" placeholder="Bring my boss a coffee..."/>
 </mat-dialog-content>
 <mat-dialog-actions class="absolute">
   <button [mat-dialog-close]="false" class="bg-slate-600/25 hover:bg-emerald-400/10 h-10 w-25 rounded-md" (click)="createTodo()">Create</button>

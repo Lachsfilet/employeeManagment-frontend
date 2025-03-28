@@ -34,17 +34,18 @@ export class TodoOverviewComponent {
       switchMap(() => {
         return this.route.params.pipe(
           map(params => params['id']),
-          tap(id => this.employeeId = id),
           switchMap((id) => this.todoService.getAllTodosByEmployeeId(id).pipe(
             tap(todos => {
               this.completedTodos = todos.filter(todo => todo.completed);
               this.dueTodos = todos.filter(todo => !todo.completed);
-            })
+              if (todos) {
+                this.employeeId = todos[0].employeeId
+              }
+            }),
           ))
         );
       })
     )
-    console.log(this.employeeId)
   }
 
   markTodo(id: number, completed: boolean) {
@@ -95,6 +96,6 @@ export class TodoOverviewComponent {
       data: {
         employeeId: this.employeeId
       }
-    })
+    }).afterClosed().subscribe(() => this.reloadSubject.next())
   }
 }
