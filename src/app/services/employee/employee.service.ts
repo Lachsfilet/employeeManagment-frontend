@@ -6,25 +6,25 @@ import {Employee} from '../../interfaces/employee';
   providedIn: 'root'
 })
 export class EmployeeService {
-  baseUrl = "https://backend.lachsfilet.tech:8080/";
+  baseUrl = "https://backend.lachsfilet.tech:8080";
 
   constructor(private httpClient: HttpClient) {
   }
 
   createEmployee(employee: Employee) {
-    return this.httpClient.post(`${this.baseUrl}employee`, employee);
+    return this.httpClient.post(`${this.baseUrl}/employee`, employee);
   }
 
   getAllEmployees() {
-    return this.httpClient.get<Employee[]>(`${this.baseUrl}employee`);
+    return this.httpClient.get<Employee[]>(`${this.baseUrl}/employee`);
   }
 
   getEmployeeById(id: number) {
-    return this.httpClient.get<Employee>(`${this.baseUrl}employee/${id}`);
+    return this.httpClient.get<Employee>(`${this.baseUrl}/employee/${id}`);
   }
 
   updateEmployee(employee: Employee) {
-    return this.httpClient.post(`${this.baseUrl}employee/${employee.id}`, {
+    return this.httpClient.post(`${this.baseUrl}/employee/${employee.id}`, {
       firstName: employee.firstName,
       lastName: employee.lastName,
       image: employee.image,
@@ -33,7 +33,7 @@ export class EmployeeService {
   }
 
   deleteEmployee(id: number) {
-    return this.httpClient.delete(`${this.baseUrl}employee/${id}`);
+    return this.httpClient.delete(`${this.baseUrl}/employee/${id}`);
   }
 
 

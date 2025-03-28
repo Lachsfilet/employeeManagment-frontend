@@ -1,1 +1,7 @@
-<p>create-tod-alert works!</p>
+<h1 mat-dialog-title>Create Todo</h1>
+<mat-dialog-content>
+  <input matNativeControl [formControl]="todo">
+</mat-dialog-content>
+<mat-dialog-actions class="absolute">
+  <button [mat-dialog-close]="false" class="bg-slate-600/25 hover:bg-emerald-400/10 h-10 w-25 rounded-md" (click)="createTodo()">Create</button>
+</mat-dialog-actions>

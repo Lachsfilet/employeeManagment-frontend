@@ -8,6 +8,7 @@ import { Todo } from '../../interfaces/todo';
 import { MatListModule } from '@angular/material/list';
 import {MatDialog} from '@angular/material/dialog';
 import {AlertComponent, DialogType} from '../../components/alert/alert.component';
+import {CreateTodoAlertComponent} from '../../components/create-todo-alert/create-todo-alert.component';
 
 @Component({
   selector: 'app-todo-overview',
@@ -26,12 +27,14 @@ export class TodoOverviewComponent {
   completedTodos: Todo[]
   dueTodos: Todo[]
   deleteButtonClicked: boolean;
+  employeeId
 
   constructor(private todoService: TodoService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {
     this.todos$ = this.reloadSubject.pipe(
       switchMap(() => {
         return this.route.params.pipe(
           map(params => params['id']),
+          tap(id => this.employeeId = id),
           switchMap((id) => this.todoService.getAllTodosByEmployeeId(id).pipe(
             tap(todos => {
               this.completedTodos = todos.filter(todo => todo.completed);
@@ -41,6 +44,7 @@ export class TodoOverviewComponent {
         );
       })
     )
+    console.log(this.employeeId)
   }
 
   markTodo(id: number, completed: boolean) {
@@ -84,5 +88,13 @@ export class TodoOverviewComponent {
         return of(null)
       })
     ).subscribe(() => this.reloadSubject.next())
+  }
+
+  createTodo() {
+    this.dialog.open(CreateTodoAlertComponent, {
+      data: {
+        employeeId: this.employeeId
+      }
+    })
   }
 }

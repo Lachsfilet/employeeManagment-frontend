@@ -47,9 +47,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (!this.employeeId) {
-      this.stateSubject.next(FormType.CREATE);
-    } else {
+    if (this.employeeId) {
       this.stateSubject.next(FormType.UPDATE);
       this.subs.add(
         this.employeeService.getEmployeeById(this.employeeId).subscribe(employee => {
@@ -65,23 +63,13 @@ export class CreateComponent implements OnInit, OnDestroy {
   }
 
   openDialog(type: DialogType, message: string) {
-    if (type === DialogType.SUCCESS) {
-      this.dialog.open(AlertComponent, {
-        data: {
-          dialogType: DialogType.SUCCESS,
-          message: message,
-          title: "Success"
-        }
-      });
-    } else if (type === DialogType.ERROR) {
-      this.dialog.open(AlertComponent, {
-        data: {
-          dialogType: DialogType.ERROR,
-          message: message,
-          title: "Error"
-        }
-      });
-    }
+    this.dialog.open(AlertComponent, {
+      data: {
+        dialogType: type,
+        message: message,
+        title: type === DialogType.SUCCESS ? "Success" : "Error"
+      }
+    });
   }
 
   createEmployee(employee: Employee): void {
@@ -100,38 +88,27 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   submitForm(): void {
     const employee = this.form.value as Employee;
-    if (this.form.invalid || !employee.image) {
-      if (!employee.image && !this.imageModalOpened) {
-        this.dialog.open(AlertComponent, {
-          data: {
-            dialogType: DialogType.WARNING,
-            message: "Are you sure you want to submit without a picture? You can add one by clicking on the default picture.",
-            title: "Warning"
-          }
-        }).afterClosed().subscribe(() => this.imageModalOpened = true);
-        return;
-      }
-      if (this.form.controls['email'].hasError('email')) {
-        this.openDialog(DialogType.ERROR, "Please enter a valid email address");
-        return;
-      }
-      if (this.form.hasError('required')) {
-        this.openDialog(DialogType.ERROR, "Please fill out all required fields");
-        return
-      }
+    if (this.form.invalid) {
+      this.openDialog(DialogType.ERROR, "Please fill out all required Fields or check your email address.");
+      return;
     }
-    if (this.stateSubject.value === FormType.CREATE) {
-      this.createEmployee(employee);
-    } else {
-      console.log()
-      this.updateEmployee(employee);
+    if (!employee.image && !this.imageModalOpened) {
+      this.dialog.open(AlertComponent, {
+        data: {
+          dialogType: DialogType.WARNING,
+          message: "Are you sure you want to submit without a picture? You can add one by clicking on the default picture.",
+          title: "Warning"
+        }
+      }).afterClosed().subscribe(() => this.imageModalOpened = true);
+      return;
     }
+    this.stateSubject.value === FormType.CREATE ? this.createEmployee(employee) : this.updateEmployee(employee);
   }
 
   uploadWorksheet(event) {
     const file = event.target.files[0];
     const fileExtension = file.name.split('.').pop();
-    if (fileExtension !== "xlsx" && fileExtension !== "xls") {
+    if (!["xlsx", "xls"].includes(fileExtension)) {
       this.openDialog(DialogType.ERROR, "Please upload an Excel file with the extension .xlsx or .xls");
       return;
     }
@@ -144,7 +121,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   uploadProfilePicture(event) {
     const file = event.target.files[0];
     const fileExtension = file.name.split('.').pop();
-    if (fileExtension !== "png" && fileExtension !== "jpg" && fileExtension !== "jpeg") {
+    if (!["png", "jpg", "jpeg"].includes(fileExtension)) {
       this.openDialog(DialogType.ERROR, "Please upload a picture with the extension .png, .jpg, or .jpeg");
       return;
     }

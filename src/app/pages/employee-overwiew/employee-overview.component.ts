@@ -55,7 +55,8 @@ export class EmployeeOverviewComponent {
         dialogType: DialogType.CUSTOM,
         message: 'Are you sure you want to delete this employee and all todos if existing?',
         title: `⚠️ Remove ${employee.firstName} ${employee.lastName}`,
-        buttonText: 'Delete'
+        buttonText: 'Delete',
+        buttonAction: true
       }}).afterClosed().pipe(
         switchMap((result) => {
           if (result) {
