@@ -67,7 +67,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       data: {
         dialogType: type,
         message: message,
-        title: type === DialogType.SUCCESS ? "Success" : "Error"
+        title: type === DialogType.SUCCESS ? "Success" : type === DialogType.ERROR ? "Error" : "Warning"
       }
     });
   }
@@ -132,6 +132,27 @@ export class CreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  abortEdit() {
+    if (this.form.dirty) {
+      this.dialog.open(AlertComponent, {
+        data: {
+          dialogType: DialogType.WARNING,
+          message: "You have unsaved changes! If you leave, your changes will be lost.",
+          buttonText: "Abort",
+          extraButton: true,
+          extraButtonText: "Save"
+        }
+      }).afterClosed().subscribe(res => {
+        if (res) {
+          this.submitForm()
+        } else {
+          this.updateStateSubject.emit(ViewState.VIEWING)
+        }
+      })
+    }
+  }
+
+  protected readonly ViewState = ViewState;
   protected readonly FormType = FormType;
 }
 

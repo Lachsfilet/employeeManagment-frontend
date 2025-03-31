@@ -1,8 +1,12 @@
 @if (state$ | async; as state) {
 <form [formGroup]="form" class="flex justify-center w-screen h-[90%]">
-  <div class="bg-[#252525]/65 h-48 md:w-150 w-90 rounded-md self-center">
+  <div class="bg-[#252525]/65 h-48 md:w-150 w-90 rounded-md self-center relative">
+    @if (state === FormType.UPDATE) {
+      <div class="absolute top-5 right-5 cursor-pointer">
+        <button class="cursor-pointer text-xl pr-2 text-red-500" (click)="abortEdit()">✖</button>
+      </div>
+    }
     <div class="flex items-center pt-4 pl-4">
-
       <label
         class="cursor-pointer">
         <input type="file" class="hidden" accept=".png,.jpg,.jpeg" (change)="uploadProfilePicture($event)"/>

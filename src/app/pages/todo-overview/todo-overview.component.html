@@ -1,20 +1,20 @@
 <div class="h-full w-full relative">
-  @if (todos$ | async) {
-    @if (dueTodos.length > 0) {
+  @if (todos$ | async; as todos) {
+    @if (dueTodos().length > 0) {
       <div class="flex justify-center lg:mt-[10%] md:mt-[15%] mt-[30%]">
         <h1 class="md:text-4xl text-xl">Todos:</h1>
       </div>
       <div class="flex flex-col rounded-lg bg-[#252525]/65 shadow-sm border border-[#202020] md:mt-[5%] mt-[10%]">
-        @for (todo of dueTodos; track todo.id) {
+        @for (todo of dueTodos(); track todo.id) {
           @if (!todo.completed) {
-            <div class="flex min-w-[240px] flex-col gap-1 p-1.5" (click)="markTodo(todo.id, true)">
+            <div class="flex min-w-[240px] flex-col gap-1 p-1.5" (click)="markTodo(todo.id, true); $event.stopPropagation()">
               <div
                 role="button"
                 class="text-slate-100 flex w-full items-center rounded-md p-2 pl-3 transition-all hover:bg-[#101010] focus:bg-[#101010] active:bg-[#101010]"
               >
                 {{ todo.title }}
                 <div class="ml-auto grid place-items-center justify-self-end">
-                  <button (click)="deleteTodo(todo)"
+                  <button (click)="deleteTodo(todo); $event.stopPropagation()"
                           class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-gray-200 hover:bg-[#050505] focus:bg-[#050505] active:bg-[#050505] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                           type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
@@ -30,20 +30,20 @@
         }
       </div>
     }
-    @if (completedTodos.length > 0) {
-      <div class="w-full flex justify-center mt-[20%]" [ngClass]="{'md:mt-[15%] mt-[30%]': completedTodos.length > 0}">
+    @if (completedTodos().length > 0) {
+      <div class="w-full flex justify-center mt-[20%]" [ngClass]="{'md:mt-[15%] mt-[30%]': dueTodos().length > 0}">
         <h1 class="md:text-4xl text-xl">Completed Todos:</h1>
       </div>
       <div class="flex flex-col rounded-lg bg-[#252525]/65 shadow-sm border border-[#202020] md:mt-[5%] mt-[10%]">
-        @for (todo of completedTodos; track todo.id) {
-          <div class="flex min-w-[240px] flex-col gap-1 p-1.5" (click)="markTodo(todo.id, false)">
+        @for (todo of completedTodos(); track todo.id) {
+          <div class="flex min-w-[240px] flex-col gap-1 p-1.5" (click)="markTodo(todo.id, false); $event.stopPropagation()">
             <div
               role="button"
               class="text-slate-100 flex w-full items-center rounded-md p-2 pl-3 transition-all hover:bg-[#101010] focus:bg-[#101010] active:bg-[#101010]"
             >
               <s class="text-red-500">{{ todo.title }}</s>
               <div class="ml-auto grid place-items-center justify-self-end">
-                <button (click)="deleteTodo(todo)"
+                <button (click)="deleteTodo(todo); $event.stopPropagation()"
                         class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-gray-200 hover:bg-[#050505] focus:bg-[#050505] active:bg-[#050505] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
@@ -56,6 +56,12 @@
             </div>
           </div>
         }
+      </div>
+    }
+    @if (todos.length === 0) {
+      <div class="h-[90%] text-emerald-600 w-screen flex justify-center items-center">
+        <h1 class="text-3xl">You currently have no todos listed, create some by clicking the create button at the
+          bottom right corner.</h1>
       </div>
     }
   }

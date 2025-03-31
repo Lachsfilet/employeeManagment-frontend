@@ -9,6 +9,6 @@ export const routes: Routes = [
   {path: '', component: EmployeeOverviewComponent},
   {path: 'create', component: CreateEmployeeComponent},
   {path: 'employee/:id', component: EmployeeViewComponent},
-  {path: 'employee/todos/:id', component: TodoOverviewComponent},
+  {path: 'employee/:id/todos', component: TodoOverviewComponent},
   {path: '**', component: WildcardComponent},
 ];

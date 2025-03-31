@@ -1,6 +1,6 @@
 @if (state$ | async; as state) {
   @if (state === EmployeeOverviewState.SKELETON) {
-    <div class="grid md:grid-cols-3 md:gap-6 gap-3 grid-cols-1 pt-26">
+    <div class="grid md:grid-cols-3 md:gap-6 3xl:grid-cols-4 gap-3 grid-cols-1 pt-26">
       @for (n of skeletonArray; track n) {
         <a [routerLink]="['/']" class="flex justify-around pt-2">
           <div class="bg-[#252525]/65 md:h-48 md:w-110 w-70 h-45 rounded-md">
@@ -24,9 +24,9 @@
   @if (employees$ | async; as employees) {
     <div class="h-[90%]">
       @if (state === EmployeeOverviewState.DATA) {
-        <div class="grid md:grid-cols-3 md:gap-6 gap-3 grid-cols-1 pt-26">
+        <div class="grid md:grid-cols-3 3xl:grid-cols-4 md:gap-6 gap-3 grid-cols-1 pt-26">
           @for (employee of employees; track employee.id) {
-            <div class="flex justify-around pt-2">
+            <div class="flex justify-around pt-2 hover:cursor-pointer">
               <div class="bg-[#252525]/65 md:h-48 md:w-110 w-70 h-45 rounded-md relative">
                 <button class="absolute top-5 right-5 cursor-pointer" (click)="deleteEmployee(employee)">
                   ❌

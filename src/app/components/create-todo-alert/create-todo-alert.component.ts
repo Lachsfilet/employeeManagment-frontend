@@ -26,7 +26,6 @@ export class CreateTodoAlertComponent {
   employeeId: number
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private todoService: TodoService) {
     this.employeeId = data.employeeId
-    console.log("Data: ", data.employeeId, "This: ", this.employeeId)
   }
 
   createTodo() {

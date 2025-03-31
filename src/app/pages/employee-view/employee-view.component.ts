@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {EmployeeService} from '../../services/employee/employee.service';
 import {Employee} from '../../interfaces/employee';
 import {BehaviorSubject, map, Observable, of, switchMap, tap} from 'rxjs';
@@ -14,6 +14,7 @@ import {CreateComponent} from '../../components/create/create.component';
   imports: [
     AsyncPipe,
     CreateComponent,
+    RouterLink,
   ],
   styleUrls: ['./employee-view.component.css']
 })

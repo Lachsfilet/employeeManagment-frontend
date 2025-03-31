@@ -19,7 +19,7 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrl: './employee-overview.component.css'
 })
 export class EmployeeOverviewComponent {
-  skeletonArray = Array(9)
+  skeletonArray = Array(18)
 
 
   reloadSubject = new BehaviorSubject<void>(void 0);
@@ -39,7 +39,7 @@ export class EmployeeOverviewComponent {
         tap(employees => {
           if (!employees) {
             this.stateSubject.next(EmployeeOverviewState.ERROR);
-          } else if (employees?.length > 0) {
+          } else if (employees.length > 0) {
             this.stateSubject.next(EmployeeOverviewState.DATA);
           } else {
             this.stateSubject.next(EmployeeOverviewState.EMPTY);

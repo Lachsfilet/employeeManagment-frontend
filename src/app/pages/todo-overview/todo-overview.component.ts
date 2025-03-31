@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, computed, Signal} from '@angular/core';
 import {TodoService} from '../../services/todo/todo.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BehaviorSubject, map, Observable, of, switchMap, tap} from 'rxjs';
@@ -9,6 +9,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatDialog} from '@angular/material/dialog';
 import {AlertComponent, DialogType} from '../../components/alert/alert.component';
 import {CreateTodoAlertComponent} from '../../components/create-todo-alert/create-todo-alert.component';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-todo-overview',
@@ -24,10 +25,9 @@ import {CreateTodoAlertComponent} from '../../components/create-todo-alert/creat
 export class TodoOverviewComponent {
   reloadSubject = new BehaviorSubject<void>(void 0);
   todos$: Observable<Todo[]>;
-  completedTodos: Todo[]
-  dueTodos: Todo[]
-  deleteButtonClicked: boolean;
-  employeeId
+  completedTodos: Signal<Todo[]>;
+  dueTodos: Signal<Todo[]>;
+  employeeId: number;
 
   constructor(
     private todoService: TodoService,
@@ -38,44 +38,39 @@ export class TodoOverviewComponent {
     this.todos$ = this.reloadSubject.pipe(
       switchMap(() => {
         return this.route.params.pipe(
-          tap(params => this.employeeId = params['id']),
-          map(params => params['id']),
-          switchMap((id) => this.todoService.getAllTodosByEmployeeId(id).pipe(
-            tap(todos => {
-              this.completedTodos = todos.filter(todo => todo.completed);
-              this.dueTodos = todos.filter(todo => !todo.completed);
-            }),
-          ))
+          map(params => +params['id']),
+          tap(employeeId => this.employeeId = employeeId),
+          switchMap((id: number) => this.todoService.getAllTodosByEmployeeId(id))
         );
       })
     );
+    const todoSignal = toSignal(this.todos$)
+    this.completedTodos = computed(() => todoSignal().filter(todo => todo.completed))
+    this.dueTodos = computed(() => todoSignal().filter(todo => !todo.completed))
   }
 
   markTodo(id: number, completed: boolean) {
-    let desc = completed ? "Are you sure you want to mark this Todo as done?" : "Are you sure you want to mark this Todo as incomplete?"
-    if (!this.deleteButtonClicked) {
-      this.dialog.open(AlertComponent, {
-        data: {
-          title: 'Are you sure?',
-          message: desc,
-          dialogType: DialogType.WARNING,
-          extraButton: true,
-          extraButtonText: "Yes",
-          extraButtonAction: true
+    const desc = completed ? "Are you sure you want to mark this Todo as done?" : "Are you sure you want to mark this Todo as incomplete?"
+    this.dialog.open(AlertComponent, {
+      data: {
+        title: 'Are you sure?',
+        message: desc,
+        dialogType: DialogType.WARNING,
+        extraButton: true,
+        extraButtonText: "Yes",
+        extraButtonAction: true
+      }
+    }).afterClosed().pipe(
+      switchMap((result: boolean) => {
+        if (result) {
+          return this.todoService.markTodoAs(id, completed)
         }
-      }).afterClosed().pipe(
-        switchMap((result: boolean) => {
-          if (result) {
-            return this.todoService.markTodoAs(id, completed)
-          }
-          return of(null)
-        })
-      ).subscribe(() => this.reloadSubject.next())
-    }
+        return of(null)
+      })
+    ).subscribe(() => this.reloadSubject.next())
   }
 
   deleteTodo(todo: Todo) {
-    this.deleteButtonClicked = true
     this.dialog.open(AlertComponent, {
       data: {
         dialogType: DialogType.CUSTOM,
@@ -89,7 +84,6 @@ export class TodoOverviewComponent {
         if (result) {
           return this.todoService.deleteTodoById(todo.id)
         }
-        this.deleteButtonClicked = false
         return of(null)
       })
     ).subscribe(() => this.reloadSubject.next())
