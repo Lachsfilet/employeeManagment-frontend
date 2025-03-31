@@ -2,7 +2,6 @@ import {Component, computed, Signal} from '@angular/core';
 import {TodoService} from '../../services/todo/todo.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BehaviorSubject, map, Observable, of, switchMap, tap} from 'rxjs';
-import {catchError} from 'rxjs/operators';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {Todo} from '../../interfaces/todo';
 import {MatListModule} from '@angular/material/list';

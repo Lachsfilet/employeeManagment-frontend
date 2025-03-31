@@ -14,7 +14,6 @@ import {CreateComponent} from '../../components/create/create.component';
   imports: [
     AsyncPipe,
     CreateComponent,
-    RouterLink,
   ],
   styleUrls: ['./employee-view.component.css']
 })
