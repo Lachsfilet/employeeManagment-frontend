@@ -98,7 +98,6 @@ export class TodoOverviewComponent implements OnDestroy {
   }
 
   createTodo() {
-    console.log(this.employeeId)
     this.subs.add(
       this.dialog.open(CreateTodoAlertComponent, {
         data: {

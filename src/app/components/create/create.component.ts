@@ -31,6 +31,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   })
 
   imageModalOpened: boolean = false;
+  pristineImage: boolean = true
   stateSubject = new BehaviorSubject<FormType>(FormType.CREATE);
   state$: Observable<FormType>;
 
@@ -136,11 +137,12 @@ export class CreateComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
     reader.onload = () => {
       this.form.patchValue({image: reader.result.toString()})
+      this.pristineImage = false
     }
   }
 
   abortEdit() {
-    if (this.form.dirty) {
+    if (this.form.dirty || !this.pristineImage) {
       this.subs.add(
         this.dialog.open(AlertComponent, {
           data: {
@@ -157,6 +159,8 @@ export class CreateComponent implements OnInit, OnDestroy {
             this.updateStateSubject.emit(ViewState.VIEWING)
           }
         }))
+    } else {
+      this.updateStateSubject.emit(ViewState.VIEWING)
     }
   }
 
