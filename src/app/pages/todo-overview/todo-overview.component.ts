@@ -1,7 +1,7 @@
-import {Component, computed, Signal} from '@angular/core';
+import {Component, computed, OnDestroy, Signal} from '@angular/core';
 import {TodoService} from '../../services/todo/todo.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BehaviorSubject, map, Observable, of, switchMap, tap} from 'rxjs';
+import {BehaviorSubject, map, Observable, of, Subscription, switchMap, tap} from 'rxjs';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {Todo} from '../../interfaces/todo';
 import {MatListModule} from '@angular/material/list';
@@ -21,12 +21,13 @@ import {toSignal} from '@angular/core/rxjs-interop';
   templateUrl: './todo-overview.component.html',
   styleUrls: ['./todo-overview.component.css']
 })
-export class TodoOverviewComponent {
+export class TodoOverviewComponent implements OnDestroy {
   reloadSubject = new BehaviorSubject<void>(void 0);
   todos$: Observable<Todo[]>;
   completedTodos: Signal<Todo[]>;
   dueTodos: Signal<Todo[]>;
   employeeId: number;
+  subs = new Subscription()
 
   constructor(
     private todoService: TodoService,
@@ -48,52 +49,62 @@ export class TodoOverviewComponent {
     this.dueTodos = computed(() => todoSignal().filter(todo => !todo.completed))
   }
 
+  ngOnDestroy() {
+    this.subs.unsubscribe()
+  }
+
   markTodo(id: number, completed: boolean) {
     const desc = completed ? "Are you sure you want to mark this Todo as done?" : "Are you sure you want to mark this Todo as incomplete?"
-    this.dialog.open(AlertComponent, {
-      data: {
-        title: 'Are you sure?',
-        message: desc,
-        dialogType: DialogType.WARNING,
-        extraButton: true,
-        extraButtonText: "Yes",
-        extraButtonAction: true
-      }
-    }).afterClosed().pipe(
-      switchMap((result: boolean) => {
-        if (result) {
-          return this.todoService.markTodoAs(id, completed)
+    this.subs.add(
+      this.dialog.open(AlertComponent, {
+        data: {
+          title: 'Are you sure?',
+          message: desc,
+          dialogType: DialogType.WARNING,
+          extraButton: true,
+          extraButtonText: "Yes",
+          extraButtonAction: true
         }
-        return of(null)
-      })
-    ).subscribe(() => this.reloadSubject.next())
+      }).afterClosed().pipe(
+        switchMap((result: boolean) => {
+          if (result) {
+            return this.todoService.markTodoAs(id, completed)
+          }
+          return of(null)
+        })
+      ).subscribe(() => this.reloadSubject.next())
+    )
   }
 
   deleteTodo(todo: Todo) {
-    this.dialog.open(AlertComponent, {
-      data: {
-        dialogType: DialogType.CUSTOM,
-        message: 'Are you sure you want to delete this Todo?',
-        title: `⚠️ Remove ${todo.title}`,
-        buttonText: 'Delete',
-        buttonAction: true
-      }
-    }).afterClosed().pipe(
-      switchMap((result) => {
-        if (result) {
-          return this.todoService.deleteTodoById(todo.id)
+    this.subs.add(
+      this.dialog.open(AlertComponent, {
+        data: {
+          dialogType: DialogType.CUSTOM,
+          message: 'Are you sure you want to delete this Todo?',
+          title: `⚠️ Remove ${todo.title}`,
+          buttonText: 'Delete',
+          buttonAction: true
         }
-        return of(null)
-      })
-    ).subscribe(() => this.reloadSubject.next())
+      }).afterClosed().pipe(
+        switchMap((result) => {
+          if (result) {
+            return this.todoService.deleteTodoById(todo.id)
+          }
+          return of(null)
+        })
+      ).subscribe(() => this.reloadSubject.next())
+    )
   }
 
   createTodo() {
     console.log(this.employeeId)
-    this.dialog.open(CreateTodoAlertComponent, {
-      data: {
-        employeeId: this.employeeId
-      }
-    }).afterClosed().subscribe(() => this.reloadSubject.next())
+    this.subs.add(
+      this.dialog.open(CreateTodoAlertComponent, {
+        data: {
+          employeeId: this.employeeId
+        }
+      }).afterClosed().subscribe(() => this.reloadSubject.next())
+    )
   }
 }

@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 
 import {EmployeeService} from '../../services/employee/employee.service';
 import {Employee} from '../../interfaces/employee';
 import {Router, RouterLink} from '@angular/router';
-import {BehaviorSubject, Observable, of, switchMap, tap, timer} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription, switchMap, tap, timer} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AsyncPipe} from '@angular/common';
 import {AlertComponent, DialogType} from '../../components/alert/alert.component';
@@ -18,7 +18,7 @@ import {MatDialog} from '@angular/material/dialog';
   templateUrl: './employee-overview.component.html',
   styleUrl: './employee-overview.component.css'
 })
-export class EmployeeOverviewComponent {
+export class EmployeeOverviewComponent implements OnDestroy {
   skeletonArray = Array(18)
 
 
@@ -27,6 +27,8 @@ export class EmployeeOverviewComponent {
   state$: Observable<EmployeeOverviewState>;
 
   employees$: Observable<Employee[]>;
+
+  subs = new Subscription()
 
   constructor(private employeeService: EmployeeService, private router: Router, private dialog: MatDialog) {
     this.state$ = this.stateSubject.asObservable();
@@ -49,32 +51,41 @@ export class EmployeeOverviewComponent {
     )
   }
 
+  ngOnDestroy() {
+    this.subs.unsubscribe()
+  }
+
   deleteEmployee(employee: Employee): void {
-    this.dialog.open(AlertComponent, {
-      data: {
-        dialogType: DialogType.CUSTOM,
-        message: 'Are you sure you want to delete this employee and all todos if existing?',
-        title: `⚠️ Remove ${employee.firstName} ${employee.lastName}`,
-        buttonText: 'Delete',
-        buttonAction: true
-      }}).afterClosed().pipe(
+    this.subs.add(
+      this.dialog.open(AlertComponent, {
+        data: {
+          dialogType: DialogType.CUSTOM,
+          message: 'Are you sure you want to delete this employee and all todos if existing?',
+          title: `⚠️ Remove ${employee.firstName} ${employee.lastName}`,
+          buttonText: 'Delete',
+          buttonAction: true
+        }
+      }).afterClosed().pipe(
         switchMap((result) => {
           if (result) {
             return this.employeeService.deleteEmployee(employee.id)
           }
           return of(null)
         })
-    ).subscribe(() => this.reloadSubject.next())
+      ).subscribe(() => this.reloadSubject.next())
+    )
   }
 
   downloadEmployees() {
-    this.employeeService.downloadEmployees().subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'employees.xlsx';
-      a.click()
-    });
+    this.subs.add(
+      this.employeeService.downloadEmployees().subscribe(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'employees.xlsx';
+        a.click()
+      })
+    );
   }
 
   protected readonly EmployeeOverviewState = EmployeeOverviewState;

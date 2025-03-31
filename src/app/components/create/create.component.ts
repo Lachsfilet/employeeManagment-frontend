@@ -73,17 +73,21 @@ export class CreateComponent implements OnInit, OnDestroy {
   }
 
   createEmployee(employee: Employee): void {
-    this.employeeService.createEmployee(employee).subscribe(() => {
-      this.openDialog(DialogType.SUCCESS, "Successfully Created User");
-      this.router.navigate(['/']);
-    });
+    this.subs.add(
+      this.employeeService.createEmployee(employee).subscribe(() => {
+        this.openDialog(DialogType.SUCCESS, "Successfully Created User");
+        this.router.navigate(['/']);
+      })
+    );
   }
 
   updateEmployee(employee: Employee): void {
-    this.employeeService.updateEmployee(employee).subscribe(() => {
-      this.updateStateSubject.emit(ViewState.VIEWING)
-      this.reloadSubject.next();
-    });
+    this.subs.add(
+      this.employeeService.updateEmployee(employee).subscribe(() => {
+        this.updateStateSubject.emit(ViewState.VIEWING)
+        this.reloadSubject.next();
+      })
+    )
   }
 
   submitForm(): void {
@@ -93,13 +97,15 @@ export class CreateComponent implements OnInit, OnDestroy {
       return;
     }
     if (!employee.image && !this.imageModalOpened) {
-      this.dialog.open(AlertComponent, {
-        data: {
-          dialogType: DialogType.WARNING,
-          message: "Are you sure you want to submit without a picture? You can add one by clicking on the default picture.",
-          title: "Warning"
-        }
-      }).afterClosed().subscribe(() => this.imageModalOpened = true);
+      this.subs.add(
+        this.dialog.open(AlertComponent, {
+          data: {
+            dialogType: DialogType.WARNING,
+            message: "Are you sure you want to submit without a picture? You can add one by clicking on the default picture.",
+            title: "Warning"
+          }
+        }).afterClosed().subscribe(() => this.imageModalOpened = true)
+      );
       return;
     }
     this.stateSubject.value === FormType.CREATE ? this.createEmployee(employee) : this.updateEmployee(employee);
@@ -112,10 +118,11 @@ export class CreateComponent implements OnInit, OnDestroy {
       this.openDialog(DialogType.ERROR, "Please upload an Excel file with the extension .xlsx or .xls");
       return;
     }
-    this.employeeService.uploadEmployee(file).subscribe(() => {
-      this.openDialog(DialogType.SUCCESS, "Successfully Created Users from Worksheet");
-      this.router.navigate(['/']);
-    });
+    this.subs.add(
+      this.employeeService.uploadEmployee(file).subscribe(() => {
+        this.openDialog(DialogType.SUCCESS, "Successfully Created Users from Worksheet");
+        this.router.navigate(['/']);
+      }));
   }
 
   uploadProfilePicture(event) {
@@ -134,21 +141,22 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   abortEdit() {
     if (this.form.dirty) {
-      this.dialog.open(AlertComponent, {
-        data: {
-          dialogType: DialogType.WARNING,
-          message: "You have unsaved changes! If you leave, your changes will be lost.",
-          buttonText: "Abort",
-          extraButton: true,
-          extraButtonText: "Save"
-        }
-      }).afterClosed().subscribe(res => {
-        if (res) {
-          this.submitForm()
-        } else {
-          this.updateStateSubject.emit(ViewState.VIEWING)
-        }
-      })
+      this.subs.add(
+        this.dialog.open(AlertComponent, {
+          data: {
+            dialogType: DialogType.WARNING,
+            message: "You have unsaved changes! If you leave, your changes will be lost.",
+            buttonText: "Abort",
+            extraButton: true,
+            extraButtonText: "Save"
+          }
+        }).afterClosed().subscribe(res => {
+          if (res) {
+            this.submitForm()
+          } else {
+            this.updateStateSubject.emit(ViewState.VIEWING)
+          }
+        }))
     }
   }
 
