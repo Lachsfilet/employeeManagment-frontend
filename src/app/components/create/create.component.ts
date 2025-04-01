@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {EmployeeService} from '../../services/employee/employee.service';
 import {Employee} from '../../interfaces/employee';
@@ -31,7 +31,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   })
 
   imageModalOpened: boolean = false;
-  pristineImage: boolean = true
+  pristineImage = signal(true)
   stateSubject = new BehaviorSubject<FormType>(FormType.CREATE);
   state$: Observable<FormType>;
 
@@ -137,12 +137,12 @@ export class CreateComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
     reader.onload = () => {
       this.form.patchValue({image: reader.result.toString()})
-      this.pristineImage = false
+      this.pristineImage.set(false)
     }
   }
 
   abortEdit() {
-    if (this.form.dirty || !this.pristineImage) {
+    if (this.form.dirty || !this.pristineImage()) {
       this.subs.add(
         this.dialog.open(AlertComponent, {
           data: {
@@ -162,6 +162,10 @@ export class CreateComponent implements OnInit, OnDestroy {
     } else {
       this.updateStateSubject.emit(ViewState.VIEWING)
     }
+  }
+
+  isFormPristine(): boolean {
+    return this.form.pristine
   }
 
   protected readonly ViewState = ViewState;

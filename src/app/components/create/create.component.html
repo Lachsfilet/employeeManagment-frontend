@@ -1,61 +1,63 @@
 @if (state$ | async; as state) {
-<form [formGroup]="form" class="flex justify-center w-screen h-[90%]">
-  <div class="bg-[#252525]/65 h-48 md:w-150 w-90 rounded-md self-center relative">
-    @if (state === FormType.UPDATE) {
-      <div class="absolute top-5 right-5 cursor-pointer">
-        <button class="cursor-pointer text-xl pr-2 text-red-500" (click)="abortEdit()">✖</button>
+  <form [formGroup]="form" class="flex justify-center w-screen h-[90%]">
+    <div class="bg-[#252525]/65 md:h-48 h-40 md:w-150 w-90 rounded-md self-center relative">
+      @if (state === FormType.UPDATE) {
+        <div class="absolute top-2 right-2 md:top-5 md:right-5 cursor-pointer">
+          <button class="cursor-pointer text-xl pr-2 text-red-500" (click)="abortEdit()">✖</button>
+        </div>
+      }
+      <div class="flex items-center pt-4 pl-4">
+        <label class="cursor-pointer">
+          <input type="file" class="hidden" accept=".png,.jpg,.jpeg" (change)="uploadProfilePicture($event)"/>
+          <img
+            [src]="[this.form.value.image ? this.form.value.image : 'https://img.icons8.com/?size=100&id=tZuAOUGm9AuS&format=png&color=000000']"
+            class="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full object-cover">
+        </label>
+
+        <div class="ml-4">
+          <label for="firstName1" class="text-sm font-bold">First Name:</label>
+          <input id="firstName1" type="text"
+                 class="text-lg md:text-2xl pl-[-1rem] bg-transparent md:w-42 w-28 border-b-2 border-[#404040]/35 outline-none"
+                 formControlName="firstName" placeholder="John"/>
+        </div>
+        <div class="md:ml-4 ml-2">
+          <label for="lastName1" class="text-sm font-bold">Last Name:</label>
+          <input id="lastName1" type="text"
+                 class="text-lg md:text-2xl pl-[-1rem] bg-transparent md:w-42 w-24 border-b-2 border-[#404040]/35 outline-none"
+                 formControlName="lastName" placeholder="Reese"/>
+        </div>
+      </div>
+
+      <div class="p-4 pl-4">
+        <label for="email" class="text-md font-bold">Email: </label> <br>
+        <input type="text" id="email"
+               class="text-sm md:text-md bg-transparent w-full border-b-2 border-[#404040]/35 outline-none"
+               formControlName="email" placeholder="john.reese@hotmail.com"/>
+      </div>
+    </div>
+    @if (!pristineImage() || !isFormPristine()) {
+      <div class="bg-[#252525] md:w-140 w-80 md:h-10 h-15 flex items-center absolute bottom-5 rounded-md">
+        <h2 class="md:ml-5 ml-2 text-xs md:text-base">Whoa! Careful there you have unsaved changes please click</h2>
+        <button
+          class="md:h-8 h-13 w-20 bg-emerald-600/10 self-center rounded-md justify-self-end ml-auto mr-1 cursor-pointer"
+          (click)="submitForm()">Save
+        </button>
       </div>
     }
-    <div class="flex items-center pt-4 pl-4">
+    @if (state === FormType.CREATE) {
       <label
-        class="cursor-pointer">
-        <input type="file" class="hidden" accept=".png,.jpg,.jpeg" (change)="uploadProfilePicture($event)"/>
-          <img [src]="[this.form.value.image ? this.form.value.image : 'https://img.icons8.com/?size=100&id=tZuAOUGm9AuS&format=png&color=000000']" height="80"
-               width="80"
-               class="w-[80px] h-auto rounded-full">
-      </label>
-
-      <div class="ml-4">
-        <label for="firstName1" class="text-sm font-bold">First Name:</label>
-        <input id="firstName1" type="text"
-               class="text-2xl pl-[-1rem] bg-transparent md:w-42 w-28 border-b-2 border-[#404040]/35 outline-none"
-               formControlName="firstName" placeholder="John" />
-      </div>
-      <div class="md:ml-4 ml-2">
-        <label for="lastName1" class="text-sm font-bold">Last Name:</label>
-        <input id="lastName1" type="text"
-               class="text-2xl pl-[-1rem] bg-transparent md:w-42 w-24 border-b-2 border-[#404040]/35 outline-none"
-               formControlName="lastName" placeholder="Reese" />
-      </div>
-    </div>
-
-    <div class="p-4 pl-4">
-      <label for="lastName1" class="text-md font-bold">Email: </label> <br>
-      <input type="text" class="text-s bg-transparent w-84 border-b-2 border-[#404040]/35 outline-none" formControlName="email"
-             placeholder="john.reese@hotmail.com" />
-    </div>
-  </div>
-
-  <div class="bg-[#252525] md:w-140 w-80 md:h-10 h-15 flex items-center absolute bottom-5 rounded-md">
-      <h2 class="md:ml-5 ml-2">Whoa! Careful there you have unsaved changes please click</h2>
-      <button class="md:h-8 h-13 w-20 bg-emerald-600/10 self-center rounded-md justify-self-end ml-auto mr-1 cursor-pointer" (click)="submitForm()">Save</button>
-  </div>
-
-  @if (state === FormType.CREATE) {
-    <label
-      class="cursor-pointer bg-emerald-600 md:h-16 md:w-16 h-12 w-12 rounded-full flex items-center justify-center absolute md:bottom-10 md:right-10 right-5 bottom-5 invisible md:visible">
-      <input type="file" class="hidden" accept=".xls,.xlsx" (change)="uploadWorksheet($event)"/>
-      <img width="40" height="40" ngSrc="https://img.icons8.com/material-rounded/40/upload--v1.png" alt="upload--v1"
-           class="p-[5px]"/>
-    </label>
-    <div class="md:invisible absolute bottom-40 justify-self-center">
-      <p class="text-center">or</p>
-      <label
-        class="cursor-pointer">
+        class="cursor-pointer bg-emerald-600 md:h-16 md:w-16 h-12 w-12 rounded-full flex items-center justify-center absolute md:bottom-10 md:right-10 right-5 bottom-5 invisible md:visible">
         <input type="file" class="hidden" accept=".xls,.xlsx" (change)="uploadWorksheet($event)"/>
-        <p class="underline text-blue-600">upload excel spreadsheet</p>
+        <img width="40" height="40" ngSrc="https://img.icons8.com/material-rounded/40/upload--v1.png" alt="upload--v1"
+             class="p-[5px]"/>
       </label>
-    </div>
-  }
-</form>
+      <div class="md:invisible absolute bottom-40 justify-self-center">
+        <p class="text-center">or</p>
+        <label class="cursor-pointer">
+          <input type="file" class="hidden" accept=".xls,.xlsx" (change)="uploadWorksheet($event)"/>
+          <p class="underline text-blue-600">upload excel spreadsheet</p>
+        </label>
+      </div>
+    }
+  </form>
 }

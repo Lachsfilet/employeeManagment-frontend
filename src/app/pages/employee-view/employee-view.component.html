@@ -2,9 +2,9 @@
   @if (employee$ | async; as employee) {
     @if (state === ViewState.VIEWING) {
       <div class="flex justify-center items-center w-screen h-[90%]">
-        <div class="bg-[#252525]/65 md:h-48 md:w-110 w-70 h-45 rounded-md relative">
-          <div class="absolute top-5 right-5 cursor-pointer">
-              <button class="cursor-pointer text-xl pt-2 pr-2" (click)="changeState()">✎</button>
+        <div class="bg-[#252525]/65 md:h-48 md:w-110 w-70 h-60 rounded-md relative">
+          <div class="absolute top-2 right-2 md:top-5 md:right-5 cursor-pointer">
+              <button class="text-xl pt-2 pr-2" (click)="changeState()">✎</button>
           </div>
           <div class="flex items-center pt-4 pl-4">
             <img [src]="[employee.image ? employee.image : 'https://img.icons8.com/?size=100&id=tZuAOUGm9AuS&format=png&color=000000']" height="80"
@@ -14,9 +14,9 @@
           </div>
 
           <div class="ml-4">
-            <h1 class="absolute bottom-5">Email: <br>{{ employee.email }}</h1>
-            <button class="absolute right-5 bottom-5 cursor-pointer hover:bg-emerald-500/10 rounded-md px-4 py-2 underline-offset-3 hover:no-underline underline" (click)="router.navigate(['employee/', employee.id, 'todos'])">Todos</button>
+            <h1 class="absolute md:bottom-5 bottom-20">Email: <br>{{ employee.email }}</h1>
           </div>
+          <button class="absolute right-5 bottom-5 cursor-pointer hover:bg-emerald-500/10 rounded-md px-4 py-2 underline-offset-3 hover:no-underline underline" (click)="router.navigate(['employee/', employee.id, 'todos'])">Todos</button>
         </div>
       </div>
     } @else {
