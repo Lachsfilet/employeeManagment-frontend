@@ -1,9 +1,9 @@
-<h1 mat-dialog-title>Create Todo</h1>
-<mat-dialog-content>
+<h1 mat-dialog-title data-cy="create-todo-title">Create Todo</h1>
+<mat-dialog-content data-cy="create-todo-content">
   <input id="todo" type="text"
          class="pl-[-1rem] bg-transparent border-b-2 h-10 w-[95%] border-[#404040]/35 outline-none"
-         [formControl]="todo" placeholder="Bring my boss a coffee..."/>
+         [formControl]="todo" placeholder="Bring my boss a coffee..." data-cy="todo-input"/>
 </mat-dialog-content>
-<mat-dialog-actions class="absolute">
-  <button [mat-dialog-close]="false" class="bg-slate-600/25 hover:bg-emerald-400/10 h-10 w-25 rounded-md" (click)="createTodo()">Create</button>
+<mat-dialog-actions class="absolute" data-cy="create-todo-actions">
+  <button [mat-dialog-close]="false" class="bg-slate-600/25 hover:bg-emerald-400/10 h-10 w-25 rounded-md" (click)="createTodo()" data-cy="create-todo-button">Create</button>
 </mat-dialog-actions>
