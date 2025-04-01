@@ -22,6 +22,8 @@ import {Subscription} from 'rxjs';
   templateUrl: './create-todo-alert.component.html',
   styleUrl: './create-todo-alert.component.css'
 })
+
+// TODO: validation
 export class CreateTodoAlertComponent implements OnDestroy {
   todo: FormControl<string> = new FormControl('')
   employeeId: number
