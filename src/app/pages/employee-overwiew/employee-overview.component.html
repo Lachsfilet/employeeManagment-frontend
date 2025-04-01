@@ -31,7 +31,7 @@
                 <button class="absolute md:top-5 md:right-5 top-2.5 right-2.5 cursor-pointer" (click)="deleteEmployee(employee)">
                   ❌
                 </button>
-                <div [routerLink]="'/employee/' + employee.id">
+                <div [routerLink]="'/employee/' + employee.id" data-cy="employee-link">
 
                   <div class="flex items-center pt-4 pl-4">
                     <img [src]="[employee.image ? employee.image : 'https://img.icons8.com/?size=100&id=tZuAOUGm9AuS&format=png&color=000000']" height="80"
