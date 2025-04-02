@@ -41,9 +41,8 @@ export class CreateTodoAlertComponent implements OnDestroy {
       if(this.todo.invalid) {
         this.dialog.open(AlertComponent, {
           data: {
-            title: "Error",
             message: "Please enter a Todo",
-            type: DialogType.ERROR
+            dialogType: DialogType.ERROR
           }
         })
       } else {
